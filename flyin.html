@@ -2,99 +2,107 @@
 <html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            margin: 0;
-            border: 0;
-            padding: 0;
-            position: relative;
-            overflow: hidden;
-            font-family: sans-serif;
-        }
-
-        .scroll {
-            margin: 0 auto;
-            max-width: 100vw;
-            width: 100vw;
-            height: 100vh;
-            overflow: scroll;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.3);
-            scroll-behavior: smooth;
-
-            position: relative;
-        }
-
-        .flyin {
-            background-image: url('http://source.unsplash.com/tZpmdFfU5gQ');
-            background-size: cover;
-            background-position: 50% 50%;
-            width: 50vw;
-            height: 50vh;
-            z-index: 1;
-
-            position: absolute;
-        }
-
-        .flyin.left {
-            top: 80vh;
-            left: 100vw;
-        }
-
-        .flyin.right {
-            top: 160vh;
-            left: 0vw;
-        }
-        .spacer {
-            height: 500vh;
-            width: 100vw;
-
-            background: linear-gradient(to bottom, lavender, white);
-        }
-    </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<div class="scroll">
-    <button>scroll down</button>
-    <div class="flyin left"></div>
-    <div class="flyin right"></div>
+<script>
+  // redirect to https since AnimationWorklet is only availably in secure contexts.
+  if (location.protocol != 'https:') {
+    location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+  }
+</script>
 
-    <div class="spacer"></div>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+
+  .scroll {
+    margin: 0 auto;
+    max-width: 100vw;
+    width: 100vw;
+    height: 100vh;
+    overflow: scroll;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.3);
+    scroll-behavior: smooth;
+
+    position: relative;
+  }
+
+  .flyin {
+    background-image: url('http://source.unsplash.com/tZpmdFfU5gQ');
+    background-size: cover;
+    background-position: 50% 50%;
+    width: 40vw;
+    height: 40vh;
+    z-index: 1;
+
+    position: absolute;
+  }
+
+  .flyin.left {
+    top: 80vh;
+    left: 100vw;
+  }
+
+  .flyin.right {
+    top: 120vh;
+    left: 0vw;
+  }
+
+  .spacer {
+    height: 500vh;
+    width: 100vw;
+
+    background: linear-gradient(to bottom, lavender, white);
+  }
+</style>
+<div class="scroll">
+  <button>scroll down</button>
+  <div class="flyin left"></div>
+  <div class="flyin right"></div>
+
+  <div class="spacer"></div>
 </div>
 <script>
-    CSS.animationWorklet.addModule('passthrough-animator.js').then(function () {
-        const scroller = document.querySelector('div.scroll');
-        const flyinLeft = document.querySelector('div.flyin.left');
-        const flyinRight = document.querySelector('div.flyin.right');
+  CSS.animationWorklet.addModule('passthrough-animator.js').then(function () {
+    const scroller = document.querySelector('div.scroll');
+    const flyinLeft = document.querySelector('div.flyin.left');
+    const flyinRight = document.querySelector('div.flyin.right');
 
-        // The flyin comes in as we scroll one page. So:
-        //   - effect duration = scroller.clientHeight
-        //   - timeRange       = scrollRange
-        const scrollRange = scroller.scrollHeight - scroller.clientHeight;
-        const scrollTimeline = new ScrollTimeline({ scrollSource: scroller, orientation: 'block', timeRange: scrollRange });
-
-        
-        const flyinLeftFrames = new KeyframeEffect(flyinLeft, { 'transform': ['translateX(0)',  'translateX(-50vw)']}, scroller.clientHeight);
-        // starts later but runs faster
-        const flyinRightFrames = new KeyframeEffect(flyinRight, { 'transform': ['translateX(0)', 'translateX(50vw)'] }, {duration: scroller.clientHeight/2, delay: scroller.clientHeight/2});
-
-        
-        const animationLeft = new WorkletAnimation('passthrough', flyinLeftFrames, scrollTimeline);
-        animationLeft.play();
-        const animationRight = new WorkletAnimation('passthrough', flyinRightFrames, scrollTimeline);
-        animationRight.play();
+    // The flyin comes in as we scroll one page. So:
+    //   - effect duration = scroller.clientHeight
+    //   - timeRange       = scrollRange
+    const scrollRange = scroller.scrollHeight - scroller.clientHeight;
+    const scrollTimeline = new ScrollTimeline({ scrollSource: scroller, orientation: 'block', timeRange: scrollRange });
 
 
-        document.querySelector('button').addEventListener('click', function () {
-            scroller.scrollTo(0, 500);
-        })
-    });
+    const flyinLeftFrames = new KeyframeEffect(flyinLeft, { 'transform': ['translateX(0)', 'translateX(-60vw)'] }, scroller.clientHeight);
+    // starts later but runs faster
+    const flyinRightFrames = new KeyframeEffect(flyinRight, { 'transform': ['translateX(0)', 'translateX(40vw)'] }, { duration: scroller.clientHeight / 2, delay: scroller.clientHeight / 2 });
+
+
+    const animationLeft = new WorkletAnimation('passthrough', flyinLeftFrames, scrollTimeline);
+    animationLeft.play();
+    const animationRight = new WorkletAnimation('passthrough', flyinRightFrames, scrollTimeline);
+    animationRight.play();
+
+
+    document.querySelector('button').addEventListener('click', function () {
+      scroller.scrollTo(0, 500);
+    })
+  });
 </script>
 
 </html>

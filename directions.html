@@ -1,32 +1,39 @@
+<script>
+  // redirect to https since AnimationWorklet is only availably in secure contexts.
+  if (location.protocol != 'https:') {
+    location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+  }
+</script>
+
 <style>
-.scroller {
-  overflow: auto;
-  height: 100px;
-  width: 100px;
-  border: 1px black solid;
-}
+  .scroller {
+    overflow: auto;
+    height: 100px;
+    width: 100px;
+    border: 1px black solid;
+  }
 
-.rightToLeft {
-  direction: rtl;
-}
+  .rightToLeft {
+    direction: rtl;
+  }
 
-.bottomToTop {
-  writing-mode: vertical-rl;
-  direction: rtl;  
-}
+  .bottomToTop {
+    writing-mode: vertical-rl;
+    direction: rtl;
+  }
 
-.horizontalContents {
-  height: 100%;
-  width: 1000px;
-  background: linear-gradient(to left, blue, white);
-}
+  .horizontalContents {
+    height: 100%;
+    width: 1000px;
+    background: linear-gradient(to left, blue, white);
+  }
 
-.verticalContents {
-  height: 1000px;
-  width: 100%;
-background: linear-gradient(to bottom, green, white);
+  .verticalContents {
+    height: 1000px;
+    width: 100%;
+    background: linear-gradient(to bottom, green, white);
 
-}
+  }
 </style>
 
 <div>Horizontal scrollers:</div>
@@ -56,24 +63,24 @@ background: linear-gradient(to bottom, green, white);
 <div id="scroller4Output">Current time:</div>
 
 <script>
-    const horizontalScroller = new ScrollTimeline({ scrollSource: scroller1, timeRange: 1000, orientation: 'horizontal' });
-    const horizontalScrollerRightToLeft = new ScrollTimeline({ scrollSource: scroller2, timeRange: 1000, orientation: 'horizontal' });
-    const verticalScroller = new ScrollTimeline({ scrollSource: scroller3, timeRange: 1000, orientation: 'vertical' });
-    const verticalScrollerBottomToTop = new ScrollTimeline({ scrollSource: scroller4, timeRange: 1000, orientation: 'vertical' });
+  const horizontalScroller = new ScrollTimeline({ scrollSource: scroller1, timeRange: 1000, orientation: 'horizontal' });
+  const horizontalScrollerRightToLeft = new ScrollTimeline({ scrollSource: scroller2, timeRange: 1000, orientation: 'horizontal' });
+  const verticalScroller = new ScrollTimeline({ scrollSource: scroller3, timeRange: 1000, orientation: 'vertical' });
+  const verticalScrollerBottomToTop = new ScrollTimeline({ scrollSource: scroller4, timeRange: 1000, orientation: 'vertical' });
 
-    scroller1.addEventListener('scroll', function () {
-        scroller1Output.innerText = 'Current time: ' + Math.round(horizontalScroller.currentTime);
-    });
+  scroller1.addEventListener('scroll', function () {
+    scroller1Output.innerText = 'Current time: ' + Math.round(horizontalScroller.currentTime);
+  });
 
-    scroller2.addEventListener('scroll', function () {
-        scroller2Output.innerText = 'Current time: ' + Math.round(horizontalScrollerRightToLeft.currentTime);
-    });
+  scroller2.addEventListener('scroll', function () {
+    scroller2Output.innerText = 'Current time: ' + Math.round(horizontalScrollerRightToLeft.currentTime);
+  });
 
-    scroller3.addEventListener('scroll', function () {
-        scroller3Output.innerText = 'Current time: ' + Math.round(verticalScroller.currentTime);
-    });
+  scroller3.addEventListener('scroll', function () {
+    scroller3Output.innerText = 'Current time: ' + Math.round(verticalScroller.currentTime);
+  });
 
-    scroller4.addEventListener('scroll', function () {
-        scroller4Output.innerText = 'Current time: ' + Math.round(verticalScrollerBottomToTop.currentTime);
-    });
+  scroller4.addEventListener('scroll', function () {
+    scroller4Output.innerText = 'Current time: ' + Math.round(verticalScrollerBottomToTop.currentTime);
+  });
 </script>
